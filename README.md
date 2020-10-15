@@ -40,9 +40,15 @@ Configure::write('ReconnexionBar', [
 ]);
 ```
 
-You must create 2 actions to use this plugin.
+You must load the ReconnexionBarComponent and create 2 actions to use this plugin.
 For exemple, in the UsersController.php file :
 ```
+public function initialize()
+{
+    parent::initialize();
+    $this->loadComponent('ReconnexionBar.Reconnexion');
+}
+
 /**
 * Action to connect on another account
 */
