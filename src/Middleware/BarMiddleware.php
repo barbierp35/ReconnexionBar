@@ -23,6 +23,16 @@ class BarMiddleware
     {
         $response = $next($request, $response);
 
+        // Skip debugkit requests and requestAction()
+        $path = $request->getUri()->getPath();
+        if (
+            strpos($path, 'debug_kit') !== false ||
+            strpos($path, 'debug-kit') !== false ||
+            $request->is('requested')
+        ) {
+            return $response;
+        }
+
         $body = $response->getBody();
         if (!$body->isSeekable() || !$body->isWritable()) {
             return $response;
@@ -31,15 +41,15 @@ class BarMiddleware
         $body->rewind();
         $contents = $body->getContents();
 
-        // Body tag found?
-        $pos = strrpos($contents, '</body>');
-        if ($pos === false) {
-            return $response;
-        }
-
         // ReconnexionBar already injected?
         $pos = strrpos($contents, 'id="reconnexionbar"');
         if ($pos != false) {
+            return $response;
+        }
+
+        // Body tag found?
+        $pos = strrpos($contents, '</body>');
+        if ($pos === false) {
             return $response;
         }
 
