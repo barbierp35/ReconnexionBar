@@ -51,4 +51,12 @@ class ReconnexionComponent extends Component
 
         return $this->getController()->redirect($parentAccount['referer']);
     }
+
+    /**
+     * Suppression de la variable de session parentAccount
+     */
+    public function deleteReconnectSession()
+    {
+        $this->getController()->getRequest()->getSession()->delete('parentAccount');
+    }
 }
