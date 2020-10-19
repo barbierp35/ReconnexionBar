@@ -30,17 +30,22 @@ bin/cake plugin load ReconnexionBar
 Optional, you can change the configuration in your bootstrap.php file :
 ```
 Configure::write('ReconnexionBar', [
-    'column_name' => 'first_name', // Name of the column (string) or list of columns (array) you want to show in the bar the know which account is connected
+    'column_name' => 'first_name', // Name of the column (string). You can use a virtual field for more customization
     'linkActionReconnectParentAccount' => [ // Url of action to reconnect on parent account
         'prefix' => false,
         'plugin' => false,
         'controller' => 'Users',
         'action' => 'reconnectParentAccount'
+    ],
+    'style' => [
+        'type' => 'bar', // bar or circle
+        'position' => 'bottom', // For bar : bottom or top. For circle : top-left, top-right, bottom-left or bottom-right
+        'color' => '#e63757' // Color of the bar or circle
     ]
 ]);
 ```
 
-You must load the ReconnexionBarComponent and create 2 actions to use this plugin.
+You must load the ReconnexionBarComponent, create 2 actions and edit logout action to use this plugin.
 For exemple, in the UsersController.php file :
 ```
 public function initialize()
@@ -64,5 +69,11 @@ public function connectOtherAccount($userId)
 public function reconnectParentAccount()
 {
     $this->Reconnexion->reconnectParentAccount();
+}
+
+public function logout()
+{
+    $this->Reconnexion->deleteReconnectSession();
+    ...
 }
 ```

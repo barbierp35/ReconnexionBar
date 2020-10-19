@@ -1,0 +1,104 @@
+#reconnexionbar {
+  display: flex;
+  justify-content: space-between;
+  width:100%;
+  padding:2px 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 25px;
+  font-size: 14px;
+  color:white;
+  z-index:9999;
+}
+
+#btn-reconnexion {
+  position: fixed;
+  z-index: 9999;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+}
+
+#btn-reconnexion > #btn-reconnexion-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: transform .2s;
+}
+
+#btn-reconnexion > #btn-reconnexion-image:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+#btn-reconnexion > #btn-reconnexion-image > img {
+  width: 70%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#modal-reconnexion {
+  display: none;
+  position: absolute;
+  width: 300px;
+  max-height: 80vh;
+  border-radius: 15px;
+  background: #FFF;
+  cursor: default;
+}
+
+#modal-reconnexion > #modal-reconnexion-text {
+  padding: 15px;
+}
+
+#modal-reconnexion > #modal-reconnexion-text > p {
+  margin: 0;
+}
+
+#modal-reconnexion > #modal-reconnexion-text > #modal-reconnexion-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#modal-reconnexion > #modal-reconnexion-button {
+  display: flex;
+  border-top: 1px solid #ededed;
+}
+
+#modal-reconnexion > #modal-reconnexion-button > button,
+#modal-reconnexion > #modal-reconnexion-button > a {
+  flex: 1;
+  border: 0;
+  padding: 10px;
+  cursor: pointer;
+  outline: 0;
+  text-align: center;
+  text-decoration: none;
+  margin: 0;
+}
+
+#modal-reconnexion > #modal-reconnexion-button > button {
+  border-radius: 0 0 0 12px;
+  background: #FFF;
+}
+
+#modal-reconnexion > #modal-reconnexion-button > button:hover {
+  background: #ededed;
+}
+
+#modal-reconnexion > #modal-reconnexion-button > a {
+  border-radius: 0 0 12px 0;
+  color: #FFF;
+}
+
+#modal-reconnexion > #modal-reconnexion-button > a:hover {
+  opacity: 0.8;
+}
