@@ -54,7 +54,7 @@ Configure::write('ReconnexionBar', [
 You must load the ReconnexionBarComponent, create 2 actions and edit logout action to use this plugin.
 For exemple, in the UsersController.php file :
 ```
-public function initialize()
+public function initialize(): void
 {
     parent::initialize();
     $this->loadComponent('ReconnexionBar.Reconnexion');

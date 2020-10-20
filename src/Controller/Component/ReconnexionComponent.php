@@ -7,6 +7,22 @@ use Cake\Controller\Component;
 
 class ReconnexionComponent extends Component
 {
+    private $componentAuthentication = null;
+
+    public $components = ['ReconnexionBar.ReconnexionAuthentication', 'ReconnexionBar.ReconnexionAuth'];
+    
+    public function initialize(array $config): void
+    {
+        parent::initialize($config);
+        
+        // On utilise le bon component en fonction de celui utilisé dans l'application
+        if (isset($this->getController()->Authentication)) {
+            $this->componentAuthentication = $this->ReconnexionAuthentication;
+        } elseif (isset($this->getController()->Auth)) {
+            $this->componentAuthentication = $this->ReconnexionAuth;
+        }
+    }
+    
     /**
      * Connexion sur un autre compte
      */
@@ -17,10 +33,13 @@ class ReconnexionComponent extends Component
         if (!empty($this->getController()->getRequest()->getSession()->read('parentAccount'))) {
             $sessionParentAccount = $this->getController()->getRequest()->getSession()->read('parentAccount');
         }
-        array_push($sessionParentAccount, ['id' => $this->getController()->Auth->user('id'), 'referer' => $this->getController()->referer()]);
+        array_push($sessionParentAccount, ['id' => $this->componentAuthentication->getUserData('id'), 'referer' => $this->getController()->referer()]);
 
         $this->getController()->getRequest()->getSession()->write('parentAccount', $sessionParentAccount);
-        $this->getController()->Auth->setUser($user);
+
+        // Déconnexion puis reconnexion à l'autre compte
+        $this->componentAuthentication->disconnectUser();
+        $this->componentAuthentication->connectUser($user);
 
         $this->getController()->redirect('/');
     }
@@ -32,7 +51,7 @@ class ReconnexionComponent extends Component
     {
         // Si parentAccount n'existe pas en session, on déconnecte l'utilisateur
         if (empty($this->getController()->getRequest()->getSession()->read('parentAccount'))) {
-            return $this->getController()->redirect($this->getController()->Auth->logout());
+            return $this->getController()->redirect($this->componentAuthentication->disconnectUser());
         }
 
         // Récupération des parentAccount en session
@@ -47,7 +66,10 @@ class ReconnexionComponent extends Component
         // Modification de l'user connecté
         $userTable = TableRegistry::getTableLocator()->get('Users');
         $user = $userTable->get($parentAccount['id']);
-        $this->getController()->Auth->setUser($user);
+
+        // Déconnexion puis reconnexion à l'autre compte
+        $this->componentAuthentication->disconnectUser();
+        $this->componentAuthentication->connectUser($user);
 
         return $this->getController()->redirect($parentAccount['referer']);
     }

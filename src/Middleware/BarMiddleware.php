@@ -86,9 +86,9 @@ class BarMiddleware
     public function getContent($request, $contents, $posEndBody, $posEndHead)
     {
         // Nom de la colonne pour récupérer les infos de l'utilisateur connecté
-        $column_name = $request->getSession()->read('Auth.User.first_name');
+        $columnName = $this->getSessionAttribute($request, 'first_name');
         if (Configure::read('ReconnexionBar.column_name')) {
-            $column_name = $request->getSession()->read('Auth.User.' . Configure::read('ReconnexionBar.column_name'));
+            $columnName = $this->getSessionAttribute($request, Configure::read('ReconnexionBar.column_name'));
         }
 
         // Lien vers la reconnexion du compte parent
@@ -126,7 +126,7 @@ class BarMiddleware
                 '<div id="modal-reconnexion" style="border: 1px solid ' . $color . ';' . $modalPosition . '">' .
                     '<div id="modal-reconnexion-text">' .
                         '<p id="modal-reconnexion-title">Reconnexion</p>' .
-                        '<p>Vous êtes connecté à la place de <strong>' . $column_name . '</strong></p>' .
+                        '<p>Vous êtes connecté à la place de <strong>' . $columnName . '</strong></p>' .
                     '</div>' .
                     '<div id="modal-reconnexion-button">' .
                         '<button onclick="closeModalReconnexion()" style="color: ' . $color . ';">Fermer</button>' .
@@ -149,7 +149,7 @@ class BarMiddleware
             $reconnexion_bar =
             '<div id="reconnexionbar" style="background-color: ' . $color . ';' . ($barPosition == 'top' ? 'top: 0;' : 'bottom: 0;') . '">' .
                 '<div>' .
-                    '<span class="hidden-xs">' . __('Vous êtes') . '</span> ' . __('connecté à la place de') . ' <strong>' . $column_name . '</strong>' .
+                    '<span class="hidden-xs">' . __('Vous êtes') . '</span> ' . __('connecté à la place de') . ' <strong>' . $columnName . '</strong>' .
                 '</div>' .
                 '<div style="text-align:right;">' .
                     '<a href="' . Router::url($linkActionReconnectParentAccount) . '" style="color:white;">' .
@@ -167,7 +167,7 @@ class BarMiddleware
     /**
      * Retourne l'url de l'image
      */
-    public function getImageUrl()
+    private function getImageUrl()
     {
         $url = 'img/reconnect.png';
         $filePaths = [
@@ -187,7 +187,7 @@ class BarMiddleware
     /**
      * Retourne l'url du script JS
      */
-    public function getScriptUrl()
+    private function getScriptUrl()
     {
         $url = 'js/reconnexionbar.js';
         $filePaths = [
@@ -207,7 +207,7 @@ class BarMiddleware
     /**
      * Retourne l'url du style CSS
      */
-    public function getCssUrl()
+    private function getCssUrl()
     {
         $url = 'css/reconnexionbar.css';
         $filePaths = [
@@ -222,5 +222,15 @@ class BarMiddleware
         }
 
         return $url;
+    }
+
+    private function getSessionAttribute($request, $columnName)
+    {
+        // Récupération de la donnée en fonction du component Auth utilisé
+        if (!empty($request->getSession()->read('Auth.User'))) {
+            return $request->getSession()->read('Auth.User.' . $columnName);
+        }
+
+        return $request->getSession()->read('Auth.' . $columnName);
     }
 }
