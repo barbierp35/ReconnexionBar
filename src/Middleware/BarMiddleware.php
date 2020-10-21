@@ -172,7 +172,7 @@ class BarMiddleware
         $url = 'img/reconnect.png';
         $filePaths = [
             str_replace('/', DIRECTORY_SEPARATOR, WWW_ROOT . 'reconnexionbar/' . $url),
-            str_replace('/', DIRECTORY_SEPARATOR, CorePlugin::path('DebugKit') . 'webroot/' . $url),
+            str_replace('/', DIRECTORY_SEPARATOR, CorePlugin::path('ReconnexionBar') . 'webroot/' . $url),
         ];
         $url = '/ReconnexionBar/' . $url;
         foreach ($filePaths as $filePath) {
@@ -192,7 +192,7 @@ class BarMiddleware
         $url = 'js/reconnexionbar.js';
         $filePaths = [
             str_replace('/', DIRECTORY_SEPARATOR, WWW_ROOT . 'reconnexionbar/' . $url),
-            str_replace('/', DIRECTORY_SEPARATOR, CorePlugin::path('DebugKit') . 'webroot/' . $url),
+            str_replace('/', DIRECTORY_SEPARATOR, CorePlugin::path('ReconnexionBar') . 'webroot/' . $url),
         ];
         $url = '/ReconnexionBar/' . $url;
         foreach ($filePaths as $filePath) {
@@ -212,7 +212,7 @@ class BarMiddleware
         $url = 'css/reconnexionbar.css';
         $filePaths = [
             str_replace('/', DIRECTORY_SEPARATOR, WWW_ROOT . 'reconnexionbar/' . $url),
-            str_replace('/', DIRECTORY_SEPARATOR, CorePlugin::path('DebugKit') . 'webroot/' . $url),
+            str_replace('/', DIRECTORY_SEPARATOR, CorePlugin::path('ReconnexionBar') . 'webroot/' . $url),
         ];
         $url = '/ReconnexionBar/' . $url;
         foreach ($filePaths as $filePath) {

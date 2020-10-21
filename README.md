@@ -11,12 +11,12 @@ The recommended way to install composer packages is:
 
 **CakePHP 3**
 ```
-composer require barbierp35/reconnexion-bar:^1.0.0
+composer require barbierp35/reconnexion-bar "^1.0.0"
 ```
 
 **CakePHP 4**
 ```
-composer require barbierp35/reconnexion-bar:^2.0.0
+composer require barbierp35/reconnexion-bar "^2.0.0"
 ```
 
 Then you'll need to load the plugin in the bootstrap method of the `src/Application.php` file.
