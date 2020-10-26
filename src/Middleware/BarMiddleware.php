@@ -5,6 +5,7 @@ use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Cake\Core\InstanceConfigTrait;
 use Cake\Core\Plugin as CorePlugin;
 
 /**
@@ -12,6 +13,32 @@ use Cake\Core\Plugin as CorePlugin;
  */
 class BarMiddleware
 {
+    use InstanceConfigTrait;
+
+    protected $_defaultConfig = [
+        'column_name' => 'first_name', // Name of the column (string). You can use a virtual field for more customization
+        'linkActionReconnectParentAccount' => [ // Url of action to reconnect on parent account
+            'prefix' => false,
+            'plugin' => false,
+            'controller' => 'Users',
+            'action' => 'reconnectParentAccount'
+        ],
+        'style' => [
+            'type' => 'bar', // bar or circle
+            'position' => 'bottom', // For bar : bottom or top. For circle : top-left, top-right, bottom-left or bottom-right
+            'color' => '#e63757' // Color of the bar or circle
+        ]
+    ];
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        // Si on a des config, on les set
+        $this->setConfig(Configure::read('ReconnexionBar'));
+    }
+
     /**
      * Invoke method.
      *
@@ -86,60 +113,45 @@ class BarMiddleware
     public function getContent($request, $contents, $posEndBody, $posEndHead)
     {
         // Nom de la colonne pour récupérer les infos de l'utilisateur connecté
-        $columnName = $this->getSessionAttribute($request, 'first_name');
-        if (Configure::read('ReconnexionBar.column_name')) {
-            $columnName = $this->getSessionAttribute($request, Configure::read('ReconnexionBar.column_name'));
-        }
-
-        // Lien vers la reconnexion du compte parent
-        $linkActionReconnectParentAccount = Configure::read('ReconnexionBar.linkActionReconnectParentAccount') ?? ['prefix' => false, 'plugin' => false, 'controller' => 'Users', 'action' => 'reconnectParentAccount'];
-
-        $color = Configure::read('ReconnexionBar.style.color') ?? '#e63757';
+        $columnName = $this->getSessionAttribute($request, $this->getConfig('column_name'));
 
         // Si c'est en type circle
-        if (Configure::read('ReconnexionBar.style.type') == 'circle') {
-            switch (Configure::read('ReconnexionBar.style.position')) {
+        if ($this->getConfig('style.type') == 'circle') {
+            switch ($this->getConfig('style.position')) {
                 case 'top-left':
-                    $circlePosition = 'left: 20px;top: 20px;';
-                    $modalPosition = 'left: 0;top: 0;';
+                    $classPosition = 'top-left';
                     break;
                 case 'top-right':
-                    $circlePosition = 'right: 20px;top: 20px;';
-                    $modalPosition = 'right: 0;top: 0;';
+                    $classPosition = 'top-right';
                     break;
                 case 'bottom-right':
-                    $circlePosition = 'right: 20px;bottom: 20px;';
-                    $modalPosition = 'right: 0;bottom: 20px;';
+                    $classPosition = 'bottom-right';
                     break;
                 default:
-                    $circlePosition = 'left: 20px;bottom: 20px;';
-                    $modalPosition = 'left: 0;bottom: 0;';
+                    $classPosition = 'bottom-left';
                     break;
             }
 
 
             $reconnexion_bar =
-            '<div id="btn-reconnexion" style="' . $circlePosition . '">' .
-                '<div id="btn-reconnexion-image" style="background-color: ' . $color . ';">' .
+            '<div id="btn-reconnexion" class="' . $classPosition . '">' .
+                '<div id="btn-reconnexion-image" style="background-color: ' . $this->getConfig('style.color') . ';">' .
                     '<img src="' . $this->getImageUrl() . '" onclick="openModalReconnexion()" />' .
                 '</div>' .
-                '<div id="modal-reconnexion" style="border: 1px solid ' . $color . ';' . $modalPosition . '">' .
+                '<div id="modal-reconnexion" style="border: 1px solid ' . $this->getConfig('style.color') . ';">' .
                     '<div id="modal-reconnexion-text">' .
                         '<p id="modal-reconnexion-title">Reconnexion</p>' .
                         '<p>Vous êtes connecté à la place de <strong>' . $columnName . '</strong></p>' .
                     '</div>' .
                     '<div id="modal-reconnexion-button">' .
-                        '<button onclick="closeModalReconnexion()" style="color: ' . $color . ';">Fermer</button>' .
-                        '<a href="' . Router::url($linkActionReconnectParentAccount) . '" style="background: ' . $color . ';">Se reconnecter</a>' .
+                        '<button onclick="closeModalReconnexion()" style="color: ' . $this->getConfig('style.color') . ';">Fermer</button>' .
+                        '<a href="' . Router::url($this->getConfig('linkActionReconnectParentAccount')) . '" style="background: ' . $this->getConfig('style.color') . ';">Se reconnecter</a>' .
                     '</div>' .
                 '</div>' .
             '</div>';
-        } else {
-            // Position de la barre
-            $barPosition = Configure::read('ReconnexionBar.style.position') ?? 'bottom';
-                
+        } else {                
             // Si c'est en top, on descend le body de 25px
-            if ($barPosition == 'top') {
+            if ($this->getConfig('style.position') == 'top') {
                 $contents = substr($contents, 0, $posEndHead) . '<style>body{padding-top: 25px;}</style>' . substr($contents, $posEndHead);
 
                 // On recalcule le posEndBody car il a changé
@@ -147,12 +159,12 @@ class BarMiddleware
             }
             
             $reconnexion_bar =
-            '<div id="reconnexionbar" style="background-color: ' . $color . ';' . ($barPosition == 'top' ? 'top: 0;' : 'bottom: 0;') . '">' .
+            '<div id="reconnexionbar" style="background-color: ' . $this->getConfig('style.color') . ';' . ($this->getConfig('style.position') == 'top' ? 'top: 0;' : 'bottom: 0;') . '">' .
                 '<div>' .
                     '<span class="hidden-xs">' . __('Vous êtes') . '</span> ' . __('connecté à la place de') . ' <strong>' . $columnName . '</strong>' .
                 '</div>' .
                 '<div style="text-align:right;">' .
-                    '<a href="' . Router::url($linkActionReconnectParentAccount) . '" style="color:white;">' .
+                    '<a href="' . Router::url($this->getConfig('linkActionReconnectParentAccount')) . '" style="color:white;">' .
                         '<u>' . __('Se reconnecter') . '<span class="hidden-xs"> ' . __('à mon compte') . '</span></u>' .
                     '</a>' .
                 '</div>' .
