@@ -20,6 +20,39 @@
   height: 40px;
 }
 
+#btn-reconnexion.top-left {
+  left: 20px;
+  top: 20px;
+}
+#btn-reconnexion.top-left #modal-reconnexion {
+  left: 0;
+  top: 0;
+}
+#btn-reconnexion.top-right {
+  right: 20px;
+  top: 20px;
+}
+#btn-reconnexion.top-right #modal-reconnexion {
+  right: 0;
+  top: 0;
+}
+#btn-reconnexion.bottom-right {
+  right: 20px;
+  bottom: 20px;
+}
+#btn-reconnexion.bottom-right #modal-reconnexion {
+  right: 0;
+  bottom: 20px;
+}
+#btn-reconnexion.bottom-left {
+  left: 20px;
+  bottom: 20px;
+}
+#btn-reconnexion.bottom-left #modal-reconnexion {
+  left: 0;
+  bottom: 0;
+}
+
 #btn-reconnexion > #btn-reconnexion-image {
   position: absolute;
   top: 50%;
