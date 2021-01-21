@@ -141,7 +141,7 @@ class BarMiddleware
                 '<div id="modal-reconnexion" style="border: 1px solid ' . $this->getConfig('style.color') . ';">' .
                     '<div id="modal-reconnexion-text">' .
                         '<p id="modal-reconnexion-title">Reconnexion</p>' .
-                        '<p>Vous êtes connecté à la place de <strong>' . $columnName . '</strong></p>' .
+                        '<p>Vous êtes connecté au compte de <strong>' . $columnName . '</strong></p>' .
                     '</div>' .
                     '<div id="modal-reconnexion-button">' .
                         '<button onclick="closeModalReconnexion()" style="color: ' . $this->getConfig('style.color') . ';">Fermer</button>' .
@@ -161,7 +161,7 @@ class BarMiddleware
             $reconnexion_bar =
             '<div id="reconnexionbar" style="background-color: ' . $this->getConfig('style.color') . ';' . ($this->getConfig('style.position') == 'top' ? 'top: 0;' : 'bottom: 0;') . '">' .
                 '<div>' .
-                    '<span class="hidden-xs">' . __('Vous êtes') . '</span> ' . __('connecté à la place de') . ' <strong>' . $columnName . '</strong>' .
+                    '<span class="hidden-xs">' . __('Vous êtes') . '</span> ' . __('connecté au compte de') . ' <strong>' . $columnName . '</strong>' .
                 '</div>' .
                 '<div style="text-align:right;">' .
                     '<a href="' . Router::url($this->getConfig('linkActionReconnectParentAccount')) . '" style="color:white;">' .
