@@ -2,6 +2,7 @@
 
 namespace ReconnexionBar\Controller\Component;
 
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Controller\Component;
 
@@ -65,7 +66,7 @@ class ReconnexionComponent extends Component
 
         // Modification de l'user connecté
         $userTable = TableRegistry::getTableLocator()->get('Users');
-        $user = $userTable->get($parentAccount['id']);
+        $user = $userTable->get($parentAccount['id'], ['contain' => Configure::read('ReconnexionBar.contain')]);
 
         // Déconnexion puis reconnexion à l'autre compte
         $this->componentAuthentication->disconnectUser();

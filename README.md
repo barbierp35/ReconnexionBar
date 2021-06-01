@@ -43,6 +43,7 @@ Configure::write('ReconnexionBar', [
         'controller' => 'Users',
         'action' => 'reconnectParentAccount'
     ],
+    'contain' => ['Roles'], // default = null. Possibility to add contain of Users table to reconnect to parent account
     'style' => [
         'type' => 'bar', // bar or circle
         'position' => 'bottom', // For bar : bottom or top. For circle : top-left, top-right, bottom-left or bottom-right
