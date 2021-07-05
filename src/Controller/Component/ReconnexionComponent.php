@@ -66,7 +66,7 @@ class ReconnexionComponent extends Component
 
         // Modification de l'user connecté
         $userTable = TableRegistry::getTableLocator()->get('Users');
-        $user = $userTable->get($parentAccount['id'], ['contain' => Configure::read('ReconnexionBar.contain')]);
+        $user = $userTable->get($parentAccount['id'], Configure::read('ReconnexionBar.optionsQuery') ?? []);
 
         // Déconnexion puis reconnexion à l'autre compte
         $this->componentAuthentication->disconnectUser();
